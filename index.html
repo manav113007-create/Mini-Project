@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Electronics Sales Data Analysis</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header>
+  <div class="wrap">
+    <nav><a href="#dataset">Dataset</a><a href="#workflow">Workflow</a><a href="#calc">Try it</a><a href="#findings">Findings</a><a href="#more">Charts</a><a href="#team">Team</a></nav>
+    <button id="theme">Light mode</button>
+  </div>
+</header>
+
+<div class="hero">
+  <div class="wrap">
+    <h1>Electronics Product Sales Data Analysis</h1>
+    <p>We clean a US electronics sales dataset, analyse it with Pandas and show the results with Matplotlib and Seaborn charts.</p>
+    <a class="btn kaggle" href="https://www.kaggle.com/code/jirouuu/purchase-history-electronics/input" target="_blank" rel="noopener">View dataset on Kaggle</a>
+    <a class="btn ghost" href="#workflow">See the workflow</a>
+  </div>
+</div>
+
+<section id="dataset"><div class="wrap">
+  <h2>The dataset</h2>
+  <p class="intro">Each row is one product in one order, from stores in 9 US cities (April to September 2019).</p>
+  <div class="facts">
+    <div class="fact"><b class="count" data-to="30206">0</b><span>rows after cleaning</span></div>
+    <div class="fact"><b class="count" data-to="6">0</b><span>columns</span></div>
+    <div class="fact"><b class="count" data-to="19">0</b><span>products</span></div>
+    <div class="fact"><b class="count" data-to="9">0</b><span>cities</span></div>
+  </div>
+  <div class="scroll"><table>
+    <thead><tr><th>Column</th><th>Meaning</th></tr></thead>
+    <tbody>
+      <tr><td>Order ID</td><td>Order number (one order can have several products)</td></tr>
+      <tr><td>Product</td><td>Name of the product sold</td></tr>
+      <tr><td>Quantity Ordered</td><td>Units sold</td></tr>
+      <tr><td>Price Each</td><td>Price of one unit in dollars</td></tr>
+      <tr><td>Order Date</td><td>Date and time of the order</td></tr>
+      <tr><td>Purchase Address</td><td>Street, city, state and zip of the buyer</td></tr>
+    </tbody>
+  </table></div>
+</div></section>
+
+<section id="workflow"><div class="wrap">
+  <h2>Project workflow</h2>
+  <p class="intro">Click a step to see what we did and the code we used.</p>
+  <div class="steps" id="tabs"></div>
+  <div class="box">
+    <h3 id="title"></h3>
+    <p id="text"></p>
+    <div class="code"><pre><code id="code"></code></pre><button id="copy">Copy</button></div>
+    <div class="nav2"><button id="prev">Previous</button><button id="next">Next</button></div>
+  </div>
+</div></section>
+
+<section id="calc"><div class="wrap">
+  <h2>Try the Revenue formula</h2>
+  <p class="intro">In the analysis step we made Revenue = Price Each × Quantity Ordered. Test it here.</p>
+  <div class="box">
+    <div class="calc">
+      <select id="product" aria-label="Product"></select>
+      <input id="qty" type="number" min="1" value="1" aria-label="Quantity">
+    </div>
+    <p id="result"></p>
+  </div>
+</div></section>
+
+<section id="findings"><div class="wrap">
+  <h2>Findings</h2>
+  <p class="intro">Pick a chart. Hover over a bar to highlight it.</p>
+  <div class="pills" id="views"></div>
+  <div class="box"><div class="chart" id="bars"></div><p id="caption"></p></div>
+</div></section>
+
+<section id="more"><div class="wrap">
+  <h2>More charts</h2>
+  <p class="intro">The line chart, pie chart and heatmap from the notebook, redrawn here with plain JavaScript.</p>
+  <div class="pills" id="mviews"></div>
+  <div class="box">
+    <div id="mchart"></div>
+    <p id="mcap"></p>
+    <details><summary>Show notebook code</summary><pre><code id="mcode"></code></pre></details>
+  </div>
+</div></section>
+
+<section id="team"><div class="wrap">
+  <h2>Work division</h2>
+  <p class="intro">The project was split into three parts.</p>
+  <div class="cards">
+    <div class="card"><h3>Loading and cleaning</h3><p>Opens the file, checks missing values and duplicates, and fixes data types and dates.</p></div>
+    <div class="card"><h3>Pandas operations</h3><p>Creates the Revenue column, filters, groups, ranks products and builds summary tables.</p></div>
+    <div class="card"><h3>Matplotlib and Seaborn</h3><p>Draws the charts and writes what each chart shows.</p></div>
+  </div>
+  <h2 style="margin-top:30px">Tools used</h2>
+  <ul class="tags"><li>Python</li><li>Pandas</li><li>NumPy</li><li>SciPy</li><li>Matplotlib</li><li>Seaborn</li><li>Google Colab</li></ul>
+</div></section>
+
+<section class="final"><div class="wrap">
+  <h2>Want to try it yourself?</h2>
+  <p>Get the dataset from Kaggle and run the same steps in a notebook.</p>
+  <a class="btn kaggle" href="https://www.kaggle.com/code/jirouuu/purchase-history-electronics/input" target="_blank" rel="noopener">View dataset on Kaggle</a>
+</div></section>
+
+<footer>Built with HTML, CSS and JavaScript</footer>
+
+<script>
+const $ = id => document.getElementById(id);
+
+// dark / light mode
+$("theme").onclick = () => {
+  const dark = document.documentElement.dataset.theme !== "dark";
+  document.documentElement.dataset.theme = dark ? "dark" : "light";
+  $("theme").textContent = dark ? "Light mode" : "Dark mode";
+};
+
+// numbers count up when they appear on screen
+const watcher = new IntersectionObserver(items => items.forEach(i => {
+  if (!i.isIntersecting) return;
+  const el = i.target, end = +el.dataset.to, start = performance.now();
+  const tick = now => {
+    const p = Math.min((now - start) / 1000, 1);
+    el.textContent = Math.round(end * p).toLocaleString();
+    if (p < 1) requestAnimationFrame(tick);
+  };
+  requestAnimationFrame(tick);
+  watcher.unobserve(el);
+}));
+document.querySelectorAll(".count").forEach(c => watcher.observe(c));
+
+// tab buttons helper
+function makeTabs(box, names, onPick, cls = "tab") {
+  names.forEach((n, i) => {
+    const b = document.createElement("button");
+    b.className = cls;
+    b.innerHTML = n;
+    b.onclick = () => onPick(i);
+    box.appendChild(b);
+  });
+  return i => [...box.children].forEach((b, k) => b.classList.toggle("on", k === i));
+}
+
+// workflow steps
+const steps = [
+  ["<i>1</i>Load", "Load and inspect the data", "The CSV file is read into a Pandas DataFrame. We check the first rows, data types, summary statistics and shape.",
+   "df = pd.read_csv('Updated_sales.csv')\n\ndf.head()\ndf.info()\ndf.describe()\ndf.shape"],
+  ["<i>2</i>Clean", "Clean the data", "Missing values and duplicates are handled, the order date becomes a real date type, and the clean file is saved.",
+   "df.isnull().sum()\ndf = df.fillna(0)\ndf = df.drop_duplicates()\n\ndf['Order Date'] = pd.to_datetime(df['Order Date'], format='mixed', errors='coerce')\ndf.to_csv('clean_sales.csv', index=False)"],
+  ["<i>3</i>Analyse", "Analyse with Pandas", "A Revenue column is made from price and quantity. Then we filter, group revenue by month and rank the top 10 products.",
+   "df['Revenue'] = df['Price Each'] * df['Quantity Ordered']\n\nhigh = df[df['Revenue'] > df['Revenue'].median()]\nby_month = df.groupby('Year_Month')['Revenue'].sum()\ntop10 = product_rev.nlargest(10, 'Revenue')"],
+  ["<i>4</i>Visualise", "Draw charts with Matplotlib and Seaborn", "Matplotlib gives line, bar, pie, histogram and scatter charts. Seaborn gives the distribution, box, count, heatmap and pair plots.",
+   "plt.plot(hourly.index, hourly.values, marker='o')\nplt.bar(monthly.index, monthly.values)\nplt.pie(top.values, labels=top.index, autopct='%1.1f%%')\nplt.scatter(prod['Price'], prod['Units'], c=prod['Revenue'])\n\nsns.boxplot(data=data, x='Price Each', y='Product')\nsns.heatmap(corr, annot=True, cmap='coolwarm')\nsns.pairplot(small)"],
+  ["<i>5</i>Insights", "Read the results", "The charts show which products earn the most, which city sells the most and which hours are busiest. This helps plan promotions.",
+   "# What we look for\n# - best selling product by revenue and by units\n# - city with the highest revenue\n# - busiest hours of the day\n# - months with the most sales"]
+];
+let cur = 0;
+const markStep = makeTabs($("tabs"), steps.map(s => s[0]), i => showStep(i), "st");
+
+function showStep(i) {
+  cur = i;
+  $("title").textContent = steps[i][1];
+  $("text").textContent = steps[i][2];
+  $("code").textContent = steps[i][3];
+  $("prev").disabled = i === 0;
+  $("next").disabled = i === steps.length - 1;
+  $("copy").textContent = "Copy";
+  markStep(i);
+}
+$("prev").onclick = () => showStep(cur - 1);
+$("next").onclick = () => showStep(cur + 1);
+$("copy").onclick = () => {
+  const done = msg => $("copy").textContent = msg;
+  (navigator.clipboard ? navigator.clipboard.writeText(steps[cur][3]) : Promise.reject())
+    .then(() => done("Copied!")).catch(() => done("Select and copy"));
+};
+showStep(0);
+
+// revenue calculator
+const prices = {"20in Monitor":109.99,"27in 4K Gaming Monitor":389.99,"27in FHD Monitor":149.99,"34in Ultrawide Monitor":379.99,"AA Batteries (4-pack)":3.84,"AAA Batteries (4-pack)":2.99,"Apple Airpods Headphones":150,"Bose SoundSport Headphones":99.99,"Flatscreen TV":300,"Google Phone":600,"LG Dryer":600,"LG Washing Machine":600,"Lightning Charging Cable":14.95,"Macbook Pro Laptop":1700,"ThinkPad Laptop":999.99,"USB-C Charging Cable":11.95,"Vareebadd Phone":400,"Wired Headphones":11.99,"iPhone":700};
+Object.keys(prices).forEach(n => $("product").add(new Option(n, n)));
+function calc() {
+  const q = Math.max(1, parseInt($("qty").value) || 1), p = prices[$("product").value];
+  $("result").textContent = `Revenue = ${p} × ${q} = ` + (p * q).toLocaleString("en-US", {style: "currency", currency: "USD"});
+}
+$("product").onchange = $("qty").oninput = calc;
+calc();
+
+// findings bars
+const views = [
+  ["Top products by revenue", "$", [["Macbook Pro Laptop",1280100],["iPhone",793100],["ThinkPad Laptop",666993],["Google Phone",564600],["34in Ultrawide Monitor",391770]],
+   "Laptops and phones earn the most money."],
+  ["Top products by units", "", [["AAA Batteries (4-pack)",4950],["AA Batteries (4-pack)",4647],["Lightning Charging Cable",3803],["USB-C Charging Cable",3723],["Wired Headphones",3353]],
+   "Batteries and cables sell the most units because they are cheap."],
+  ["Revenue by city", "$", [["San Francisco",1355726],["Los Angeles",894947],["New York City",748831],["Boston",593726],["Seattle",464830],["Atlanta",453696],["Dallas",432379],["Portland",393253],["Austin",298247]],
+   "San Francisco is the top city with about 24% of all revenue."]
+];
+const markView = makeTabs($("views"), views.map(v => v[0]), i => showView(i));
+
+function showView(i) {
+  const [, prefix, rows, note] = views[i], max = rows[0][1];
+  const short = v => !prefix ? v.toLocaleString() : "$" + (v >= 1e6 ? (v / 1e6).toFixed(2) + "M" : Math.round(v / 1000) + "K");
+  $("bars").innerHTML = rows.map(r =>
+    `<div class="col" title="${r[0]}: ${prefix}${r[1].toLocaleString()}"><em>${short(r[1])}</em><div class="barv"><div class="fill" data-h="${r[1] / max * 100}"></div></div><span>${r[0]}</span></div>`
+  ).join("");
+  $("caption").textContent = note;
+  markView(i);
+  setTimeout(() => document.querySelectorAll(".fill").forEach(f => f.style.height = f.dataset.h + "%"), 30);
+}
+showView(0);
+
+// more charts: line, pie, heatmap
+const hours = [622,381,217,138,139,240,429,676,1052,1392,1826,1992,1997,1960,1810,1693,1725,1680,1979,2112,2024,1682,1441,999];
+const top6 = [["Macbook Pro Laptop",1280100],["iPhone",793100],["ThinkPad Laptop",666993],["Google Phone",564600],["34in Ultrawide Monitor",391770],["27in 4K Gaming Monitor",391160]];
+const corr = {names: ["Quantity", "Price", "Revenue", "Hour"], m: [[1,-0.15,-0.14,0],[-0.15,1,1,0],[-0.14,1,1,0],[0,0,0,1]]};
+const colors = ["#8b7cff", "#ff7a93", "#38bdf8", "#fbbf24", "#34d399", "#c084fc"];
+
+function lineChart() {
+  const W = 600, H = 300, l = 55, r = 15, t = 15, b = 45, max = 2200;
+  const x = h => l + h / 23 * (W - l - r), y = v => t + (1 - v / max) * (H - t - b);
+  let s = `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Orders by hour">`;
+  for (let v = 0; v <= 2000; v += 500)
+    s += `<line class="grid" x1="${l}" x2="${W - r}" y1="${y(v)}" y2="${y(v)}"/><text x="${l - 8}" y="${y(v) + 4}" text-anchor="end">${v}</text>`;
+  hours.forEach((v, h) => s += `<text x="${x(h)}" y="${H - b + 16}" text-anchor="middle">${h}</text>`);
+  s += `<polyline class="ln" points="${hours.map((v, h) => x(h) + "," + y(v)).join(" ")}"/>`;
+  hours.forEach((v, h) => s += `<circle class="dot" cx="${x(h)}" cy="${y(v)}" r="4"><title>Hour ${h}: ${v.toLocaleString()} orders</title></circle>`);
+  s += `<circle class="dot" cx="${W - 80}" cy="${t + 8}" r="4"/><text x="${W - 70}" y="${t + 12}">Orders</text>`;
+  s += `<text x="${(l + W - r) / 2}" y="${H - 6}" text-anchor="middle">Hour</text>`;
+  s += `<text transform="translate(14 ${(t + H - b) / 2}) rotate(-90)" text-anchor="middle">Number of orders</text></svg>`;
+  return s;
+}
+
+function pieChart() {
+  const total = top6.reduce((a, p) => a + p[1], 0), cx = 150, cy = 150, R = 115;
+  let ang = -Math.PI / 2, paths = "", items = "";
+  top6.forEach((p, i) => {
+    const sweep = p[1] / total * 2 * Math.PI, mid = ang + sweep / 2;
+    const ox = i ? 0 : Math.cos(mid) * 12, oy = i ? 0 : Math.sin(mid) * 12;      // first slice is pulled out (explode)
+    const pt = a => [cx + ox + R * Math.cos(a), cy + oy + R * Math.sin(a)];
+    const [x1, y1] = pt(ang), [x2, y2] = pt(ang + sweep), pct = (p[1] / total * 100).toFixed(1);
+    paths += `<path class="slice" fill="${colors[i]}" d="M${cx + ox} ${cy + oy} L${x1} ${y1} A${R} ${R} 0 ${sweep > Math.PI ? 1 : 0} 1 ${x2} ${y2}Z"><title>${p[0]}: ${pct}%</title></path>`;
+    paths += `<text class="pct" x="${cx + ox + R * .65 * Math.cos(mid)}" y="${cy + oy + R * .65 * Math.sin(mid) + 4}" text-anchor="middle">${pct}%</text>`;
+    items += `<li><i style="background:${colors[i]}"></i>${p[0]}</li>`;
+    ang += sweep;
+  });
+  return `<div class="pie"><svg viewBox="0 0 300 300">${paths}</svg><ul class="legend">${items}</ul></div>`;
+}
+
+function coolwarm(v) {                       // -1 = blue, 0 = grey, 1 = red
+  const t = (v + 1) / 2, k = t < .5 ? t * 2 : (t - .5) * 2;
+  const a = t < .5 ? [59, 76, 192] : [221, 221, 221], b = t < .5 ? [221, 221, 221] : [180, 4, 38];
+  return `rgb(${a.map((c, i) => Math.round(c + (b[i] - c) * k))})`;
+}
+
+function heatmap() {
+  let s = `<div class="heat"><span></span>` + corr.names.map(n => `<b>${n}</b>`).join("");
+  corr.m.forEach((row, i) => {
+    s += `<b>${corr.names[i]}</b>` + row.map(v =>
+      `<span style="background:${coolwarm(v)};color:${Math.abs(v) > .6 ? "#fff" : "#1e1b4b"}">${v.toFixed(2)}</span>`).join("");
+  });
+  return s + `</div><div class="scale"></div><div class="scalelab"><span>-1</span><span>0</span><span>1</span></div>`;
+}
+
+const more = [
+  ["Line chart", lineChart, "Orders peak around 12 PM and 7 to 8 PM, and are lowest around 3 to 4 AM.",
+`plt.figure(figsize=(8, 5))
+plt.plot(hourly.index, hourly.values, color='red', marker='o', linestyle='-', label='Orders')
+plt.title('Orders by Hour')
+plt.xlabel('Hour')
+plt.ylabel('Number of orders')
+plt.grid(True)
+plt.legend()
+plt.show()`],
+  ["Pie chart", pieChart, "The Macbook Pro Laptop alone is about 31% of the revenue of these six products.",
+`top = prod['Revenue'].sort_values(ascending=False).head(6)
+
+plt.figure(figsize=(7, 7))
+plt.pie(top.values, labels=top.index, autopct='%1.1f%%', startangle=90, explode=[0.1, 0, 0, 0, 0, 0])
+plt.title('Top 6 Products by Revenue')
+plt.show()`],
+  ["Heatmap", heatmap, "Price and Revenue move together (about 1.0). Hour has almost no link with the other columns.",
+`corr = data[['Quantity Ordered', 'Price Each', 'Revenue', 'Hour']].corr()
+
+plt.figure(figsize=(6, 5))
+sns.heatmap(corr, annot=True, cmap='coolwarm')
+plt.title('Correlation Heatmap')
+plt.show()`]
+];
+const markMore = makeTabs($("mviews"), more.map(m => m[0]), i => showMore(i));
+
+function showMore(i) {
+  $("mchart").innerHTML = more[i][1]();
+  $("mcap").textContent = more[i][2];
+  $("mcode").textContent = more[i][3];
+  markMore(i);
+}
+showMore(0);
+</script>
+</body>
+</html>
